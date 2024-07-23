@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <style>
+    #session{
+      display: none;
+    }
+    </style>
+    <title>Hello World</title>
+  </head>
+  <body>
+      <h2>Client Application !!</h2>
+      <h2 id="user-info">Log in here...</h2>
+      <div>
+        <input type="text" id="username" placeholder="Enter Your Username" />
+        <button onclick="login()">login</button>
+      </div>
+      <iframe src="http://127.0.0.1:8001 " id="session" ></iframe>
+  <script>
+    const sessionWindow = document.getElementById("session").contentWindow;
+    const userInfoElement = document.getElementById("user-info");
+
+    //display logged-in user info
+    const showUserInfo = (username) =>
+      (userInfoElement.innerText = `You're logged in as ${JSON.stringify(
+        username
+      )}`);
+    
+    //send data to shared storage in session app
+    const sendDataToSession = (data) => {
+      sessionWindow.postMessage(data, "http://127.0.0.1:8001 ");
+    };
+    
+    //Receive messages from Session App and Display in UI.
+    window.addEventListener(
+      "message",
+      (event) => {
+        showUserInfo(event.data);
+      },
+      false
+    );
+    
+    //Send Auth info to shared storage on user login
+    const login = () => {
+      const username = document.getElementById("username").value;
+      if( username.length == localStorage.getItem("auth") ) {
+        showUserInfo(username);
+        sendDataToSession(username);
+      }
+    };
+  </script>
+  </body>
+</html>

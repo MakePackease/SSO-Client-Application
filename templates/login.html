@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+</head>
+<body>
+    <button id="loginButton" onclick="openPopup()" >Login</button>
+    <h1>Currently Logged-In Users</h1>
+    <ul id="user-list">
+        <!-- User list will be populated here by JavaScript -->
+    </ul>
+    <script>
+        function getCookie(name) {
+            // Split cookies by semicolon
+            var cookies = document.cookie.split(';');
+            
+            // Iterate over each cookie
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                
+                // Check if the cookie starts with the name we are looking for
+                if (cookie.startsWith(name + '=')) {
+                    // Return the value of the cookie
+                    return cookie.substring(name.length + 1, cookie.length);
+                }
+            }
+            
+            // Return null if cookie not found
+            return null;
+        }
+        function openPopup() {
+            popupWindow = window.open("http://127.0.0.1:8000/parent/logged_in_users_popup/", "Logged-In Users", "width=600,height=400");
+
+            var sso_session_id = getCookie('sso-sessionid');
+            console.log('sso_session_id:', sso_session_id);
+            if (popupWindow) {
+                // Poll the popup window to check if it's closed
+                const checkClosed = setInterval(function() {
+                    if (popupWindow.closed) {
+                        clearInterval(checkClosed); // Stop polling
+                        console.log('Popup window closed');
+                        // Redirect the main window
+                        // window.location.href = "http://127.0.0.1:5000/"; // Replace with your desired URL
+                        sso_session_id = getCookie('sso-sessionid');
+                        console.log('sso_session_id:', sso_session_id);
+                        //const token = localStorage.getItem('jwtToken'); // Get token from local storage or other source
+                        // if (token) {
+                        //     fetch('http://127.0.0.1:5000/protected', {
+                        //         method: 'GET',
+                        //         headers: {
+                        //             'Authorization': `Bearer ${token}`
+                        //         }
+                        //     })
+                        //     .then(response => response.json())
+                        //     .then(data => {
+                        //         // Handle the response data if needed
+                        //         console.log('Response:', data);
+                        //         window.location.href = "http://127.0.0.1:5000/"; // Redirect after the request is successful
+                        //     })
+                        //     .catch(error => {
+                        //         console.error('Error:', error);
+                        //     });
+                        // } else {
+                        //     console.error('Token not found');
+                        // }
+                        // console.log(token)
+                    }
+                }, 1000); // Adjust the polling interval as needed
+            }
+        }
+
+        // document.getElementById('loginButton').addEventListener('click', function() {
+        //     // Example token retrieval from localStorage, replace with your actual implementation
+            
+        //     // Check if token exists
+        //     // Make AJAX request to Flask backend
+        //     fetch('/check_django_auth', {
+        //         method: 'GET',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         }
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         // Handle response from Flask backend
+        //         console.log('Response:', data);
+        //         const userList = document.getElementById('user-list');
+        //         userList.innerHTML = '';
+        //         // Redirect or perform other actions based on the response
+        //         data.forEach(user => {
+        //             const li = document.createElement('li');
+        //             const link = document.createElement('a');
+        //             // link.href = `http://127.0.0.1:8000/parent/login_as_user/${user}/`; // Adjust the URL pattern as needed
+        //             link.href = `javascript:loginAsUser('${user}')`;
+        //             link.textContent = user;
+        //             li.appendChild(link);
+        //             // li.textContent = user.username;
+        //             // li.textContent = user;
+        //             userList.appendChild(li);
+        //         });
+        //     })
+        //     .catch(error => {
+        //         console.error('Error:', error);
+        //     });
+        // });
+        // // Function to handle login as user
+        // function loginAsUser(username) {
+        //     // Perform login operation with the selected username
+        //     fetch(`http://127.0.0.1:8000/parent/login_as_user/${username}/`, {
+        //         method: 'GET', // Adjust the method as per your backend implementation
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         }
+        //     })
+        //     .then(response => {
+        //         if (response.ok) {
+        //             alert(`Successfully logged in as ${username}`);
+        //             // Close the popup or redirect to another page
+        //             // For example, you can close the popup:
+        //             window.location.href = "http://127.0.0.1:5000/"; // Redirect after the request is successful
+        //         } else {
+        //             alert('Failed to log in');
+        //         }
+        //     })
+        //     .catch(error => console.error('Error:', error));
+        // }
+    </script>
+</body>
+</html>
