@@ -29,7 +29,10 @@
             return null;
         }
         function openPopup() {
-            popupWindow = window.open("http://127.0.0.1:8000/parent/logged_in_users_popup/", "Logged-In Users", "width=600,height=400");
+            popupWindow = window.open("http://127.0.0.1:5000/parent/logged_in_users_popup/", "Logged-In Users", "width=600,height=400");
+            /*
+            to do : above url is set to self domain instead of parent so that pop up could appear without triggering popup close event
+            */
 
             var sso_session_id = getCookie('sso-sessionid');
             console.log('sso_session_id:', sso_session_id);

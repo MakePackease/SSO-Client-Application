@@ -44,31 +44,31 @@ def close_connection(exception):
 # Define a basic route
 current_user = None
 @app.route('/')
-@cross_origin(origins=["http://127.0.0.1:8000", "http://127.0.0.1:5000"])
+@cross_origin(origins=["http://127.0.0.1:8000", "http://127.0.0.1:5050"])
 def index():
-    auth_header = request.headers.get('Authorization')
-    print("Auth header: %s" % auth_header)
-    print(redis_client.get('current_user'))
-    print( session )
-    sso_session_id = request.cookies.get('sso-sessionid')
-    if not sso_session_id:
-        print ('No sso-sessionid found', 401 ) # Unauthorized
-    else:
-        print(sso_session_id)
-    cookie_value = request.cookies.get('my_cookie')
-    print( "cookie_value", cookie_value )
-    current_user = redis_client.get('current_user').decode('utf-8')
-    db = get_db()
-    cursor = db.execute('SELECT * FROM auth_user WHERE username = ?', (current_user,))
-    user = cursor.fetchone()
-    print (list(enumerate(user, 0)))
+    # auth_header = request.headers.get('Authorization')
+    # print("Auth header: %s" % auth_header)
+    # print(redis_client.get('current_user'))
+    # print( session )
+    # sso_session_id = request.cookies.get('sso-sessionid')
+    # if not sso_session_id:
+    #     print ('No sso-sessionid found', 401 ) # Unauthorized
+    # else:
+    #     print(sso_session_id)
+    # cookie_value = request.cookies.get('my_cookie')
+    # print( "cookie_value", cookie_value )
+    # current_user = redis_client.get('current_user').decode('utf-8')
+    # db = get_db()
+    # cursor = db.execute('SELECT * FROM auth_user WHERE username = ?', (current_user,))
+    # user = cursor.fetchone()
+    # print (list(enumerate(user, 0)))
 
-    if user:
-        return render_template('home.html', username=user[4])
-        return jsonify(message=f"User found:  {user[4]}"),200
-    else:
-        return jsonify(message="User not found"), 404
-    current_user = session.get('current_user')
+    # if user:
+    return render_template('home.html')
+    #     return jsonify(message=f"User found:  {user[4]}"),200
+    # else:
+    #     return jsonify(message="User not found"), 404
+    # current_user = session.get('current_user')
     # const token = localStorage.getItem('jwtToken');
     # return render_template('index.html')
     print("-->",session.get('current_user'))
@@ -166,7 +166,9 @@ def protected():
     print("Current", current_user)
     return jsonify(logged_in_as=current_user), 200
 
-
+@app.route('/logout', methods=['GET'])
+def logout():
+    return "logout"
 if __name__ == '__main__':
     app.run(debug=True)
 
